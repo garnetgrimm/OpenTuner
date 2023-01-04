@@ -1,0 +1,82 @@
+<html>
+  <head>
+    <script src="https://cdn.jsdelivr.net/npm/p5@1.5.0/lib/p5.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+    <script src="opentuner.js"></script>
+	
+	<style>
+	.musical_button {
+		box-shadow:inset 0px 1px 0px 0px #ffffff;
+		background:linear-gradient(to bottom, #ffffff 5%, #f6f6f6 100%);
+		background-color:#ffffff;
+		border-radius:6px;
+		border:1px solid #dcdcdc;
+		display:inline-block;
+		cursor:pointer;
+		color:#666666;
+		font-family:Arial;
+		font-size:15px;
+		font-weight:bold;
+		padding:6px 24px;
+		text-decoration:none;
+		text-shadow:0px 1px 0px #ffffff;
+	}
+	.musical_button:hover {
+		background:linear-gradient(to bottom, #f6f6f6 5%, #ffffff 100%);
+		background-color:#f6f6f6;
+	}
+	.musical_button:active {
+		position:relative;
+		top:1px;
+	}
+
+	</style>
+	
+  </head>
+  <body>
+	<div id="picture"></div>
+	<div id="musical_scale"><h2>Scale</h2></div>
+	<div id="musical_tune"><h2>Tuning</h2></div>	
+  	<script>
+	for(var i = 0; i < notes.length; i++){
+		$('#musical_scale').append('<button class="musical_button" id="musical_scale_' + i + '" onclick="scaleToggle(' + i + ')">' + notes[i] + '</button>')
+		$('#musical_tune').append('<button class="musical_button" id="musical_tune_' + i + '" onclick="tuneToggle(' + i + ')">' + notes[i] + '</button>')
+	}
+	
+	
+	let scaleStack = []
+	function scaleToggle(idx) {
+		stackIdx = scaleStack.indexOf(idx);
+		if(stackIdx >= 0) {
+			scaleStack.splice(stackIdx, 1);
+			$("#musical_scale_" + idx).text(notes[idx]);
+		} else {
+			scaleStack.push(idx)
+		}
+		
+		music_scale = []
+		for(var i = 0; i < scaleStack.length; i++) {
+			$("#musical_scale_" + scaleStack[i]).text(notes[scaleStack[i]] + " [" + (i + 1) + "]");
+			
+			music_scale.push(notes[scaleStack[i]])
+		}
+	}
+	
+	let tuneStack = []
+	let tuneIdx = 0;
+	function tuneToggle(idx) {	
+		if (tuneStack.length < stringNum) {
+			tuneStack.push(idx)
+		} else {
+			tuneStack[tuneIdx] = idx;
+			tuneIdx++;
+			tuneIdx %= stringNum;
+		}
+		
+		for(var i = 0; i < tuneStack.length; i++) {
+			tuning[tuning.length - i - 1] = notes[tuneStack[i]]
+		}
+	}
+	</script>
+  </body>
+</html>
